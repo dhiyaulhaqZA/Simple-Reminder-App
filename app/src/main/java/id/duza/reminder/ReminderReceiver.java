@@ -17,7 +17,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class ReminderReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        //setting untuk tampilan notification
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Reminder!!!")
@@ -25,7 +25,9 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify(1, mBuilder.build());
+
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        //menyalakan vibrasi selama setengah detik
         vibrator.vibrate(500);
     }
 }

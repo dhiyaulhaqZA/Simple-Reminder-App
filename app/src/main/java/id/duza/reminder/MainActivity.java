@@ -19,9 +19,11 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
+    //TODO: Nambahin komentar biar jelas
 
-    private static final String PICKER_TAG = "time_picker";
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String PICKER_TAG = "time_picker";
+
     private EditText etReminder;
     private Button btnSetTime;
     private Button btnSave;
@@ -63,10 +65,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveData() {
+
         String reminderText = etReminder.getText().toString();
 
         Intent intent = new Intent(this, ReminderReceiver.class);
+        // data yang akan di tampilkan di notification
         intent.putExtra("data", reminderText);
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 123,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -75,31 +80,23 @@ public class MainActivity extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
 
-        Log.d(TAG, "before : " +c.getTimeInMillis());
-        Log.d(TAG, "Year : " + c.get(Calendar.YEAR));
-        Log.d(TAG, "Month : " + c.get(Calendar.MONTH));
-        Log.d(TAG, "Day : " + c.get(Calendar.DAY_OF_MONTH));
-        Log.d(TAG, mHour + ":" + mMinute);
-
-        long timeInMilis = ((mHour - c.get(Calendar.HOUR_OF_DAY)) * 60 * 60000) + ((mMinute-c.get(Calendar.MINUTE)) * 60000);
+        //selisih waktu sekarang dengan alarm
+        long timeInMilis = ((mHour - c.get(Calendar.HOUR_OF_DAY)) * 60 * 60000) + ((mMinute-c.get(Calendar.MINUTE)) * 60000) - (c.get(Calendar.SECOND) * 1000);
         Log.d(TAG, "timeInMilis : " + timeInMilis);
+        // gettimeinmillis adalah waktu sekarang, timeinmilis adalah selisih nya
+        // sehingga jika dijumlah = waktu alarm yang sebenarnya
         long alarmInMilis = c.getTimeInMillis() + timeInMilis;
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), mHour, mMinute);
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmInMilis, pendingIntent);
 
-        Log.d(TAG, "after : " +c.getTimeInMillis());
+        Log.d(TAG, "alarmInMilis : " + c.getTimeInMillis());
         Log.d(TAG, "Year : " + c.get(Calendar.YEAR));
         Log.d(TAG, "Month : " + c.get(Calendar.MONTH));
         Log.d(TAG, "Day : " + c.get(Calendar.DAY_OF_MONTH));
         Log.d(TAG, mHour + ":" + mMinute);
 
-        Toast.makeText(this, "Reminder for : \n" +
-                                reminderText +
-                                "\n time : " +
-                                c.get(Calendar.YEAR) + " " +
-                                c.get(Calendar.MONTH) + " " +
-                                c.get(Calendar.DAY_OF_MONTH) + "at : " +
-                                mHour + ":" + mMinute,
+        Toast.makeText(this, "Reminder for : " + reminderText +
+                                "\n time : " + mHour + ":" + mMinute,
                                 Toast.LENGTH_SHORT).show();
     }
 
