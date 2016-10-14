@@ -2,9 +2,11 @@ package id.duza.reminder;
 
 import android.app.AlarmManager;
 import android.app.DialogFragment;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -43,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         mHour = hour;
                         mMinute = minute;
-                        Toast.makeText(MainActivity.this, "Nice bro", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //saveData();
+                saveData();
             }
         });
     }
@@ -70,10 +71,20 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        c.clear();
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), mHour, mMinute);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
 
+        Toast.makeText(this, "Reminder for : \n" +
+                                reminderText +
+                                "\n time : " +
+                                c.get(Calendar.YEAR) + " " +
+                                c.get(Calendar.MONTH) + " " +
+                                c.get(Calendar.DAY_OF_MONTH) + "at : " +
+                                mHour + ":" + mMinute,
+                                Toast.LENGTH_SHORT).show();
     }
 
     private void setupView() {
