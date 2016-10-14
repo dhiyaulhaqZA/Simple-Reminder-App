@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private static final String PICKER_TAG = "time_picker";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private EditText etReminder;
     private Button btnSetTime;
     private Button btnSave;
@@ -72,10 +74,24 @@ public class MainActivity extends AppCompatActivity {
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
-        c.clear();
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), mHour, mMinute);
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        Log.d(TAG, "before : " +c.getTimeInMillis());
+        Log.d(TAG, "Year : " + c.get(Calendar.YEAR));
+        Log.d(TAG, "Month : " + c.get(Calendar.MONTH));
+        Log.d(TAG, "Day : " + c.get(Calendar.DAY_OF_MONTH));
+        Log.d(TAG, mHour + ":" + mMinute);
+
+        long timeInMilis = ((mHour - c.get(Calendar.HOUR_OF_DAY)) * 60 * 60000) + ((mMinute-c.get(Calendar.MINUTE)) * 60000);
+        Log.d(TAG, "timeInMilis : " + timeInMilis);
+        long alarmInMilis = c.getTimeInMillis() + timeInMilis;
+        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), mHour, mMinute);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alarmInMilis, pendingIntent);
+
+        Log.d(TAG, "after : " +c.getTimeInMillis());
+        Log.d(TAG, "Year : " + c.get(Calendar.YEAR));
+        Log.d(TAG, "Month : " + c.get(Calendar.MONTH));
+        Log.d(TAG, "Day : " + c.get(Calendar.DAY_OF_MONTH));
+        Log.d(TAG, mHour + ":" + mMinute);
 
         Toast.makeText(this, "Reminder for : \n" +
                                 reminderText +
