@@ -12,10 +12,10 @@
     tools:context="id.duza.reminder.MainActivity">
 
     <EditText
-        android:id="@+id/etTextToShow"
+        android:id="@+id/et_reminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Text To Show"/>
+        android:hint="Remind me to ..."/>
 
     <Button
         android:id="@+id/btnSetTime"
